@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_fragment :: head(~{::title})">
+    <title>关于我</title>
+</head>
+<body>
+<!--头部导航-->
+<nav th:replace="_fragment :: menu(5)"></nav>
+<!-- 中间 -->
+<div class="m-container m-padded-tb-big">
+    <div class="ui container">
+        <div class="ui stackable grid">
+<!--            <div class="eleven wide column">-->
+<!--                <img th:src="@{https://picsum.photos/800/600/}" alt="" class="ui rounded image">-->
+<!--            </div>-->
+<!--            <div class="five wide column">-->
+                <div class="ui center aligned top basic attached segment">
+                    <img src="#" th:src="@{/images/avatar.jpg}" style="width: 100px;"  alt="">
+                    <h1>Yaxing G.</h1>
+                </div>
+                <!-- 说明 -->
+                <div class="ui center aligned attached segment">
+                    <p class="m-text">Yaxing G. 新人开发者，不断学习，不断进步。爱好编程、阅读和运动</p>
+                </div>
+                <!-- 标签 -->
+                <div class="ui center aligned attached segment">
+                    <div class="ui orange basic label">编程</div>
+                    <div class="ui orange basic label">跑步</div>
+                    <div class="ui orange basic label">阅读</div>
+                </div>
+                <!-- 技术标签 -->
+                <div class="ui center aligned attached segment">
+                    <div class="ui green basic label m-margin-tb-tiny">java</div>
+                    <div class="ui green basic label m-margin-tb-tiny">MySql</div>
+                    <div class="ui green basic label m-margin-tb-tiny">Redis</div>
+                    <div class="ui green basic label m-margin-tb-tiny">spring</div>
+                </div>
+                <div class="ui center aligned bottom attached segment">
+                    <a href="https://github.com/Hawks-eat-nothing" class="ui circular icon button"><i
+                            class="github icon"></i></a>
+                    <a href="#" class="ui wechat circular icon button"><i class="wechat icon"></i></a>
+                    <a href="#" class="ui qq circular icon button" data-content="365328807"><i class="qq icon"></i></a>
+                </div>
+                <div class="ui wechat-qr flowing popup top left transition hidden">
+                    <img src="../static/images/wechat.png" th:src="@{/images/wechat.png}" alt=""
+                         class="ui rounded image" style="width: 100px;">
+                </div>
+<!--            </div>-->
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<!--底部footer-->
+<footer th:replace="_fragment :: footer" class="ui inverted vertical segment m-padded-tb-massive">
+
+</footer>
+
+<!--导入的script-->
+<th:block th:replace="_fragment :: script">
+
+</th:block>
+<script>
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+    $('.qq').popup();
+    $('.wechat').popup({
+        popup: $('.wechat-qr'),
+        on: 'hover',
+        position: 'bottom center'
+    })
+</script>
+</body>
+</html>

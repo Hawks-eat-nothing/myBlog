@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://101.132.131.114:3306/blog?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 1021
+  main:
+    allow-circular-references: true
+
+logging:
+  level:
+    root: info
+    com.yxg.blog: debug
+  file:
+    name: log/blog-dev.log
+
+mybatis:
+  type-aliases-package: com.yxg.blog.pojo
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true #设置返回字段不为空，前端不报错

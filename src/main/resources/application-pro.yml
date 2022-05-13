@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://101.132.131.114:3306/blog?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 1021
+
+logging:
+  level:
+    root: warn
+    com.yxg.blog: info
+  file:
+    path: log/blog-pro.log
+
+mybatis:
+  type-aliases-package: com.yxg.blog.entity
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+server:
+  port: 8081

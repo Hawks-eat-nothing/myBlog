@@ -1,4 +1,4 @@
-# myBlog
+# X.FreeNotes
 **个人博客项目，基于springBoot和myBatis实现**
 
 访问地址：[博客首页](101.132.131.114:8080)

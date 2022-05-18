@@ -2,7 +2,8 @@
 **个人博客项目，基于springBoot和myBatis实现**
 
 访问地址：[博客首页](http://101.132.131.114:8080/)
-项目文档：[博客搭建文档](http://101.132.131.114:8090/)
+
+项目文档：[博客搭建文档](http://101.132.131.114:8090/archives/yi-kuan-xiao-er-mei-de-ge-ren-bo-ke-xiang-mu)
 
 **登录页面**
 <div style="width: 80%">

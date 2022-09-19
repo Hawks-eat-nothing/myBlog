@@ -6,6 +6,25 @@ spring:
     password: 1021
   main:
     allow-circular-references: true
+  mail:
+    host: smtp.outlook.com
+    username: yaxing_guo@outlook.com
+    address: yaxing_guo@outlook.com
+    password: xxx
+    default-encoding: utf-8
+    protocol: smtp
+    port: 25
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
 
 logging:
   level:

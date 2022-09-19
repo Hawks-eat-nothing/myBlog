@@ -22,16 +22,12 @@ public class Comment {
     //头像
     private String avatar;
     private Date createTime;
-
     private Long blogId;
     private Long parentCommentId;  //父评论id
     private String parentNickname;
-
     //回复评论
     private List<Comment> replyComments = new ArrayList<>();
-    private Comment parentComment;
-
     //父评论
+    private Comment parentComment;
     private Blog blog;
-
 }

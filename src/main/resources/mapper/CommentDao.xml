@@ -5,54 +5,64 @@
 <mapper namespace="com.yxg.blog.dao.CommentDao">
 
 
-    <resultMap id="comment" type="com.yxg.blog.pojo.Comment">
-        <id property="id" column="cid"/>
-        <result property="nickname" column="nickname"/>
-        <result property="email" column="email"/>
-        <result property="content" column="content"/>
-        <result property="adminComment" column="admincomment"/>
-        <result property="avatar" column="avatar"/>
-        <result property="createTime" column="create_time"/>
-        <result property="blogId" column="blog_id"/>
-        <result property="parentCommentId" column="parent_comment_id"/>
-        <association property="blog" javaType="com.yxg.blog.pojo.Blog">
-            <id property="id" column="id"/>
-        </association>
-    </resultMap>
-    <delete id="deleteComment">
-        delete from myblog.t_comment where id = #{id}
-    </delete>
+<!--    <resultMap id="comment" type="com.yxg.blog.pojo.Comment">-->
+<!--        <id property="id" column="id"/>-->
+<!--        <result property="nickname" column="nickname"/>-->
+<!--        <result property="email" column="email"/>-->
+<!--        <result property="content" column="content"/>-->
+<!--        <result property="adminComment" column="admin_comment"/>-->
+<!--        <result property="avatar" column="avatar"/>-->
+<!--        <result property="createTime" column="create_time"/>-->
+<!--        <result property="blogId" column="blog_id"/>-->
+<!--        <result property="parentCommentId" column="parent_comment_id"/>-->
+<!--        <association property="blog" javaType="com.yxg.blog.pojo.Blog">-->
+<!--            <id property="id" column="id"/>-->
+<!--        </association>-->
+<!--    </resultMap>-->
 
-    <select id="findByBlogIdAndParentCommentNull" resultMap="comment">
-        select c.id cid,c.nickname,c.email,c.content,c.avatar,
-               c.create_time,c.blog_id,c.parent_comment_id
-        from t_comment c, t_blog b
-        where c.blog_id = b.id and c.blog_id = #{blogId} and c.parent_comment_id = #{blogParentId}
-        order by c.create_time desc
-    </select>
-
-    <!--查询二级子评论-->
-    <select id="findByBlogIdAndReplyId" resultType="com.yxg.blog.pojo.Comment">
-        select *
-        from t_comment c
-        where c.blog_id = #{blogId} and c.parent_comment_id = #{childId}
-        order by c.create_time desc
-    </select>
-
-
+    <!--新增评论-->
     <insert id="saveComment" parameterType="com.yxg.blog.pojo.Comment">
         insert into blog.t_comment (nickname,email,content,avatar,
-                                    create_time,blog_id,parent_comment_id, admincomment)
+                                    create_time,blog_id,parent_comment_id, admin_comment)
         values (#{nickname},#{email},#{content},#{avatar},
                 #{createTime},#{blogId},#{parentCommentId}, #{adminComment});
     </insert>
 
+    <!--查询父级评论-->
+    <select id="findByBlogIdParentIdNull" resultType="com.yxg.blog.pojo.Comment">
+        select *
+        from blog.t_comment c
+        where c.blog_id = #{blogId} and c_parent_comment_id = #{blogParentId}
+        order by c.create_time desc
+    </select>
 
-    <select id="findByParentCommentId" resultMap="comment">
-        select c.id cid, c.nickname, c.email, c.content, c.avatar,
-               c.create_time, c.blog_id, c.parent_comment_id
-        from t_comment c
-        where c.parent_comment_id = #{parentCommentId}
+    <!--查询1级评论-->
+    <select id="findByBlogIdParentIdNotNull" resultType="com.yxg.blog.pojo.Comment">
+        select *
+        from blog.t_comment c
+        where c.blog_id = #{blogId} and c_parent_comment_id = #{id}
+        order by c.create_time desc
+    </select>
+
+    <!--查询2级子评论-->
+    <select id="findByBlogIdAndReplyId" resultType="com.yxg.blog.pojo.Comment">
+        select *
+        from blog.t_comment c
+        where c.blog_id = #{blogId} and c.parent_comment_id = #{childId}
+        order by c.create_time desc
+    </select>
+
+    <!--删除评论-->
+    <delete id="deleteComment">
+        delete from blog.t_comment where id = #{id}
+    </delete>
+
+    <!--    根据父评论id查询留言信息-->
+    <select id="getEmailByParentId" resultType="com.yxg.blog.pojo.Comment">
+        select *
+        from blog.t_comment c
+        where c.id = #{parentId}
+        order by c.create_time desc
     </select>
 
 </mapper>

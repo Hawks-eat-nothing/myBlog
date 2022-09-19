@@ -12,6 +12,7 @@ import java.util.Date;
 public class BlogQuery {
     private Long id;
     private String title;
+    private Date createTime;
     private Date updateTime;
     private Boolean recommend;
     private Boolean published;

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yxg.blog.pojo.Blog;
 import com.yxg.blog.pojo.Type;
+import com.yxg.blog.queryvo.FirstPageBlog;
 import com.yxg.blog.service.BlogService;
 import com.yxg.blog.service.TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +27,16 @@ public class TypeShowController {
     @GetMapping("/types/{id}")
     public String types(@PathVariable Long id, @RequestParam(required = false,defaultValue = "1",value = "pagenum")int pagenum,
                         Model model){
-        PageHelper.startPage(pagenum, 100);  //开启分页
+//        PageHelper.startPage(pagenum, 100);  //开启分页
         List<Type> types = typeService.getBlogType();
         //-1从导航点过来的
         if (id == -1){
             id = types.get(0).getId();
         }
-        List<Blog> blogs = blogService.getByTypeId(id);
-        PageInfo<Blog> pageInfo = new PageInfo<>(blogs);
         model.addAttribute("types", types);
+        List<FirstPageBlog> blogs = blogService.getByTypeId(id);
+        PageInfo<FirstPageBlog> pageInfo = new PageInfo<>(blogs);
+
         model.addAttribute("pageInfo", pageInfo);
         model.addAttribute("activeTypeId", id);
 

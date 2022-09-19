@@ -29,6 +29,8 @@ public class Blog {
     private Long typeId;
     private Long userId;
 
+    private Integer commentCount;
+
     //获取多个标签的id
     private String tagIds;
     private String description;
@@ -37,13 +39,13 @@ public class Blog {
 
     private User user;
 
-    private List<Tag> tags = new ArrayList<>();
+//    private List<Tag> tags = new ArrayList<>();
 
     private List<Comment> comments = new ArrayList<>();
 
-    public void init(){
-        this.tagIds = tagsToIds(this.getTags());
-    }
+//    public void init(){
+//        this.tagIds = tagsToIds(this.getTags());
+//    }
 
     //将tags集合转换为tagIds字符串形式：“1,2,3”,用于编辑博客时显示博客的tag
     private String tagsToIds(List<Tag> tags){

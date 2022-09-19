@@ -9,19 +9,21 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FirstPageBlog {
-    //Blog
+    //博客信息
     private Long id;
     private String title;
     private String firstPicture;
     private Integer views;
     private Integer commentCount;
+    private Date createTime;
     private Date updateTime;
     private String description;
 
-    //Type
+    //分类名称
     private String typeName;
 
-    //User
+    //用户名
     private String nickname;
+    //用户头像
     private String avatar;
 }

@@ -1,5 +1,7 @@
 package com.yxg.blog.controller;
 
+import com.yxg.blog.annotation.AccessLimit;
+import com.yxg.blog.pojo.Blog;
 import com.yxg.blog.pojo.Comment;
 import com.yxg.blog.pojo.User;
 import com.yxg.blog.queryvo.DetailedBlog;
@@ -29,37 +31,53 @@ public class CommentController {
     private String avatar;
 
     @GetMapping("/comments/{blogId}")  //展示留言
-    public String comments(@PathVariable Long blogId, Model model){
+    public String comments(@PathVariable Long blogId, Model model) {
+
         List<Comment> comments = commentService.listCommentByBlogId(blogId);
         model.addAttribute("comments", comments);
         return "blog :: commentList";
     }
 
-    @PostMapping("/comments")   //提交留言
-    public String post(Comment comment, HttpSession session,Model model){
-//        Long blogId = comment.getBlog().getId();
+    @PostMapping("/comments")   //新增评论
+    @AccessLimit(seconds = 15, maxCount = 3) //15秒内 允许请求3次
+    public String post(Comment comment, HttpSession session, Model model) {
         Long blogId = comment.getBlogId();
-//        comment.setBlog(blogService.getDetailedBlog(blogId));  //绑定博客与评论
-//        comment.setBlogId(blogId);
         User user = (User) session.getAttribute("user");
-        if (user != null){   //用户为管理员
+        if (user != null) {   //用户为管理员
             comment.setAvatar(user.getAvatar());
             comment.setAdminComment(true);
-        }else {
+        } else {
+            //设置头像
             comment.setAvatar(avatar);
         }
-
-        if (comment.getParentComment().getId()!=null){
-            comment.setParentCommentId(comment.getParentComment().getId());
+        Long parentId = comment.getParentComment().getId();
+        Comment parentComment = null;
+        if (parentId != null) {
+            comment.setParentCommentId(parentId);
+            parentComment = commentService.getEmailByParentId(parentId);
         }
-        commentService.saveComment(comment);
+        commentService.saveComment(comment,parentComment);
         List<Comment> comments = commentService.listCommentByBlogId(blogId);
-        model.addAttribute("comments",comments);
-        return "blog::commentList";
-
-//        System.out.println(comment);
-//        commentService.saveComment(comment);
-//        return "redirect:/comments/" + blogId;
+        model.addAttribute("comments", comments);
+        return "blog :: commentList";
     }
+    //删除评论
+    @GetMapping("/comment/{blogId}/{id}/delete")
+    public String delete(@PathVariable Long blogId,
+                         @PathVariable Long id,
+                         Comment comment,
+                         HttpSession session,
+                         Model model) {
 
+        User user = (User) session.getAttribute("user");
+        if (user!=null){
+            commentService.deleteComment(comment,id);
+        }
+
+        DetailedBlog detailedBlog = blogService.getDetailedBlog(blogId);
+        List<Comment> comments = commentService.listCommentByBlogId(blogId);
+        model.addAttribute("blog",detailedBlog);
+        model.addAttribute("comments",comments);
+        return "blog";
+    }
 }

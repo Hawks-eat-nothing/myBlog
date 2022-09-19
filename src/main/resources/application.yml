@@ -6,3 +6,4 @@ spring:
 
 
 comment.avatar: /images/avatar.jpg
+message.avatar: /images/avatar.jpg

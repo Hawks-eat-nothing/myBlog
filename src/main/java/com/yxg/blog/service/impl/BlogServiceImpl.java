@@ -20,70 +20,96 @@ public class BlogServiceImpl implements BlogService {
     BlogDao blogDao;
 
     @Override
-    public Blog getBlog(Long id) {
-        return blogDao.getBlog(id);
-    }
-
-    @Override
-    public Blog getDetailedBlog(Long id) {
-        Blog blog = blogDao.getDetailedBlog(id);
-        if (blog==null){
+    public DetailedBlog getDetailedBlog(Long id) {
+        DetailedBlog blog = blogDao.getDetailedBlog(id);
+        if (blog == null) {
             throw new NotFoundException("该博客不存在");
         }
         String content = blog.getContent();
         blog.setContent(MarkdownUtils.markdownToHtmlExtensions(content));  //将Markdown格式转换成html
+        blogDao.updateViews(id);
+        // 文章评论数量更新
+        blogDao.getCommentCountById(id);
         return blog;
     }
 
     @Override
-    public List<Blog> getAllBlog() {
-        return blogDao.getAllBlog();
-    }
-
-    @Override
-    public List<Blog> getByTypeId(Long typeId) {
+    public List<FirstPageBlog> getByTypeId(Long typeId) {
         return blogDao.getByTypeId(typeId);
     }
 
     @Override
-    public List<Blog> getByTagId(Long tagId) {
-        return blogDao.getByTagId(tagId);
+    public List<BlogQuery> getAllBlog() {
+        return blogDao.getAllBlogQuery();
     }
 
     @Override
-    public List<Blog> getIndexBlog() {
-        return blogDao.getIndexBlog();
+    public void deleteBlog(Long id) {
+        blogDao.deleteBlog(id);
+    }
+
+
+    @Override
+    public ShowBlog getBlogById(Long id) {
+        return blogDao.getBlogById(id);
     }
 
     @Override
-    public List<Blog> getAllRecommendBlog() {
-        return blogDao.getAllRecommendBlog();
+    public int updateBlog(ShowBlog showBlog) {
+        showBlog.setUpdateTime(new Date());
+        return blogDao.updateBlog(showBlog);
     }
 
     @Override
-    public List<Blog> getSearchBlog(String query) {
+    public List<BlogQuery> getBlogBySearch(SearchBlog searchBlog) {
+        return blogDao.searchByTitleAndType(searchBlog);
+    }
+
+    @Override
+    public List<FirstPageBlog> getAllFirstPageBlog() {
+        return blogDao.getFirstPageBlog();
+    }
+
+    @Override
+    public List<RecommendBlog> getRecommendedBlog() {
+        List<RecommendBlog> allRecommendBlog = blogDao.getAllRecommendBlog();
+        return allRecommendBlog;
+    }
+
+    @Override
+    public List<FirstPageBlog> getSearchBlog(String query) {
         return blogDao.getSearchBlog(query);
     }
 
+    //统计博客总数
     @Override
-    public Map<String, List<Blog>> archiveBlog() {
-        List<String> years = blogDao.findGroupYear();
-        Set<String> set = new HashSet<>(years);
-        Map<String, List<Blog>> map = new HashMap<>();
-        for (String year : set) {
-            map.put(year,blogDao.findByYear(year));
-        }
-        return map;
+    public Integer getBlogTotal() {
+        return blogDao.getBlogTotal();
     }
 
+    //统计访问总数
     @Override
-    public int countBlog() {
-        return blogDao.getAllBlog().size();
+    public Integer getBlogViewTotal() {
+        return blogDao.getBlogViewTotal();
     }
 
+    //统计评论总数
     @Override
-    public List<Blog> searchAllBlog(Blog blog) {
-        return blogDao.searchAllBlog(blog);
+    public Integer getBlogCommentTotal() {
+        return blogDao.getBlogCommentTotal();
+    }
+
+    //统计留言总数
+    @Override
+    public Integer getBlogMessageTotal() {
+        return blogDao.getBlogMessageTotal();
+    }
+
+    //查询最新评论
+    // TODO: 存在缓存中
+    @Override
+    public List<NewComment> getNewComment() {
+        return blogDao.getNewComment();
     }
 
     @Override
@@ -91,37 +117,9 @@ public class BlogServiceImpl implements BlogService {
         blog.setCreateTime(new Date());
         blog.setUpdateTime(new Date());
         blog.setViews(0);
-        //保存博客
-        blogDao.saveBlog(blog);
-        //保存博客后才能获取自增id
-        Long id = blog.getId();
-        //将标签的数据保存到t_blogs-tag表中
-        List<Tag> tags = blog.getTags();
-        BlogAndTag blogAndTag = null;
-        for (Tag tag : tags) {
-            //新增时无法获取自增的id,在mybatis里修改
-            blogAndTag = new BlogAndTag(tag.getId(), id);
-            blogDao.saveBlogAndTag(blogAndTag);
-        }
-        return 1;
+        blog.setCommentCount(0);
+        return blogDao.saveBlog(blog);
     }
 
-    @Override
-    public int updateBlog(Blog blog) {
-        blog.setUpdateTime(new Date());
-        //将标签的数据存到t_blogs_tag表中
-        List<Tag> tags = blog.getTags();
-        BlogAndTag blogAndTag = null;
-        for (Tag tag : tags) {
-            blogAndTag = new BlogAndTag(tag.getId(), blog.getId());
-            blogDao.saveBlogAndTag(blogAndTag);
-        }
 
-        return blogDao.updateBlog(blog);
-    }
-
-    @Override
-    public int deleteBlog(Long id) {
-        return blogDao.deleteBlog(id);
-    }
 }

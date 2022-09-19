@@ -12,34 +12,59 @@ import java.util.List;
 @Mapper
 @Repository
 public interface BlogDao {
-    Blog getBlog(Long id);  //后台展示博客
-
-    Blog getDetailedBlog(@Param("id") Long id);  //博客详情
-
-    List<Blog> getAllBlog();
-
-    List<Blog> getByTypeId(Long typeId);  //根据类型id获取博客
-
-    List<Blog> getByTagId(Long tagId);  //根据标签id获取博客
-
-    List<Blog> getIndexBlog();  //主页博客展示
-
-    List<Blog> getAllRecommendBlog();  //推荐博客展示
-
-    List<Blog> getSearchBlog(String query);  //全局搜索博客
-
-    List<Blog> searchAllBlog(Blog blog);  //后台根据标题、分类、推荐搜索博客
-
-    List<String> findGroupYear();  //查询所有年份，返回一个集合
-
-    List<Blog> findByYear(@Param("year") String year);  //按年份查询博客
-
+    //保存新增博客
     int saveBlog(Blog blog);
 
-    int saveBlogAndTag(BlogAndTag blogAndTag);
+    //查询文章管理列表
+    List<BlogQuery> getAllBlogQuery();
 
-    int updateBlog(Blog blog);
+    //删除博客
+    void deleteBlog(Long id);
 
-    int deleteBlog(Long id);
+    //编辑博客
+    int updateBlog(ShowBlog showBlog);
 
+    //查询编辑修改的文章
+    ShowBlog getBlogById(Long id);
+
+    //搜索博客管理列表
+    List<BlogQuery> searchByTitleAndType(SearchBlog searchBlog);
+
+
+    //查询首页最新博客列表信息
+    List<FirstPageBlog> getFirstPageBlog();
+
+    //查询首页最新推荐信息
+    List<RecommendBlog> getAllRecommendBlog();
+
+    //搜索博客列表
+    List<FirstPageBlog> getSearchBlog(String query);
+
+    //统计博客总数
+    Integer getBlogTotal();
+
+    //统计访问总数
+    Integer getBlogViewTotal();
+
+    //统计评论总数
+    Integer getBlogCommentTotal();
+
+    //统计留言总数
+    Integer getBlogMessageTotal();
+
+    //查询博客详情
+    DetailedBlog getDetailedBlog(Long id);
+
+    //文章访问更新
+    int updateViews(Long id);
+
+    //根据博客id查询出评论数量
+    int getCommentCountById(Long id);
+
+
+    //根据TypeId查询博客列表，显示在分类页面
+    List<FirstPageBlog> getByTypeId(Long typeId);
+
+    //查询最新评论
+    List<NewComment> getNewComment();
 }
